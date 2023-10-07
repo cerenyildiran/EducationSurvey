@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "node-pty": "^1.0.0",
+    "node-static": "^0.7.11",
+    "total4": "^0.0.90"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "name": "educationsurvey",
+  "description": "![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swecery/EducationSurvey.git"
+  },
+  "author": "Ceren",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/swecery/EducationSurvey/issues"
+  },
+  "homepage": "https://github.com/swecery/EducationSurvey#readme"
+}
