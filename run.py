@@ -1,5 +1,16 @@
+from pyfiglet import Figlet
+
 # Import question lists from an external module
 from questions import student_questions, parent_questions, teacher_questions
+
+f = Figlet(font='slant')
+copyright = """
+    Education Survey.
+    https://github.com/swecery/EducationSurvey
+    Licensed under GNU GENERAL PUBLIC LICENSE
+    Copyright (c) 2023 Ceren Yildiran\n
+"""
+
 
 reset = "\033[0m"  # Resets color, returns to default color
 # Text color codes
@@ -15,6 +26,8 @@ def who_are_you():
     while True:
         try:
             # Prompt the user to choose their role and handle input exceptions
+            print(cyan + f.renderText( ' E d u c a t i o n\n S u r v e y') + reset)
+            print(cyan + copyright + reset)
             question = input(
                 cyan
                 + "Which group do you represent? (to end the survey press 'q') Please enter a number:\n"
