@@ -1,15 +1,11 @@
+import time
+import sys
 from pyfiglet import Figlet
+import gspread
+from google.oauth2.service_account import Credentials
 
 # Import question lists from an external module
 from questions import student_questions, parent_questions, teacher_questions
-
-f = Figlet(font='slant')
-copyright = """
-    Education Survey.
-    https://github.com/swecery/EducationSurvey
-    Licensed under GNU GENERAL PUBLIC LICENSE
-    Copyright (c) 2023 Ceren Yildiran\n
-"""
 
 
 reset = "\033[0m"  # Resets color, returns to default color
@@ -20,14 +16,132 @@ yellow = "\033[33m"  # Yellow
 cyan = "\033[36m"  # Cyan
 white = "\033[37m"  # White
 
+f = Figlet(font="slant")
+copyright = """
+    Education Survey.
+    https://github.com/swecery/EducationSurvey
+    Licensed under GNU GENERAL PUBLIC LICENSE
+    Copyright (c) 2023 Ceren Yildiran\n
+"""
 
-# Define a function to determine the user's role and ask relevant questions
+
+def get_google_sheet():
+    # Define the necessary OAuth2.0 scope for accessing Google Sheets and Drive.
+    SCOPE = [
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive.file",
+        "https://www.googleapis.com/auth/drive",
+    ]
+    # Load credentials from a service account JSON key file (creds.json).
+    CREDS = Credentials.from_service_account_file("creds.json")
+    # Authorize the client with the specified scope.
+    SCOPED_CREDS = CREDS.with_scopes(SCOPE)
+    # Create a Gspread client authorized with the specified credentials.
+    GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
+    # Open the Google Sheets spreadsheet by its name ("edusurvey").
+    SHEET = GSPREAD_CLIENT.open("edusurvey")
+    # Get a reference to the "Sheet1" worksheet within the spreadsheet.
+    sheet1 = SHEET.worksheet("Sheet1")
+
+    # Return the reference to the worksheet.
+    return sheet1
+
+
+def save_data(data):
+    sheet = get_google_sheet()
+    # Get the current number of rows
+    row_count = len(sheet.get_all_values())
+    # Check the maximum row limit
+    if row_count >= 1000:
+        print("Maximum row limit reached. You may need to create a new sheet.")
+        return
+    # Calculate the index of the new row
+    row_index = row_count + 1
+    # Write the data to cells
+    for i, value in enumerate(data):
+        sheet.update_cell(row_index, i + 1, value)
+
+
+def show_data():
+    # Ask the user for data and store the result in mydata
+    mydata = ask_question()
+    # Check if user provided valid data
+    if mydata is not None:
+        # Save the user's data
+        save_data(mydata)
+        # Get the Google Sheet
+        sheet = get_google_sheet()
+        # Retrieve all data from the sheet
+        data = sheet.get_all_values()
+        # Extract column names (headers) from the data
+        column_names = data[0]
+        # Display the data in a table format along with the column names
+        print_table(data, column_names)
+
+
+def print_table(data, column_name):
+    """Prints a table to the console.
+
+    Args:
+        data: A list of lists, where each inner list represents a row in the table.
+        column_names: A list of strings, where each string represents a column header.
+    """
+    # Print the table headers in red color
+    print(red + "| {:>10} | {:>10} | {:>10} | {:>10} |".format(*column_name))
+    # Print the data rows in white color
+    for row in data[1:]:
+        formatted_row = []
+        for cell in row:
+            formatted_cell = "{:>10}".format(cell)
+            formatted_row.append(formatted_cell)
+        print(white + "| {} | {} | {} | {} |".format(*formatted_row))
+
+
+def show_loading_animation():
+    """
+    Display a simple loading animation in the console.
+
+    This function prints 10 dots in a row to simulate a loading animation.
+    """
+    for _ in range(10):
+        sys.stdout.write(".")
+        sys.stdout.flush()
+        time.sleep(0.2)
+    sys.stdout.write("\n")
+    sys.stdout.flush()
+
+
 def who_are_you():
     while True:
+        who = input(cyan + "Please enter your name (to end the survey press 'q'): ")
+        # Remove leading and trailing spaces
+        who = who.strip()
+        if who == "q":
+            return who
+        # Check the length and content of the input
+        elif len(who) >= 3 and len(who) <= 10 and who.isalpha():
+            return who
+        else:
+            print(
+                cyan
+                + "Invalid input. Your name must be between 3 to 10 characters and contain only letters."
+                + reset
+            )
+
+
+# Define a function to determine the user's role and ask relevant questions
+def ask_question():
+    while True:
+        user_data = [] # Store user data
         try:
             # Prompt the user to choose their role and handle input exceptions
-            print(cyan + f.renderText( ' E d u c a t i o n\n S u r v e y') + reset)
+            print(cyan + f.renderText(" E d u c a t i o n\n S u r v e y") + reset)
             print(cyan + copyright + reset)
+            who = who_are_you()
+            if who == "q":
+                print("Good Bye!")
+                return None
+            user_data.append(who)
             question = input(
                 cyan
                 + "Which group do you represent? (to end the survey press 'q') Please enter a number:\n"
@@ -41,7 +155,7 @@ def who_are_you():
                 + "Your answer: "
             )
             if question == "q":
-                break
+                return None
             question = int(question)
         except:
             # Handle non-integer input gracefully
@@ -50,6 +164,10 @@ def who_are_you():
         if question == 1:
             # If the user chose '1' (Student), call the 'answer_questions' function with student questions
             result = answer_questions(student_questions)
+            if result == None:
+                print("Good Bye!")
+                return None
+            user_data.extend(["student", result, convert_to_percentage(result)])
             print(
                 green
                 + "Your score is, "
@@ -62,9 +180,16 @@ def who_are_you():
                 + "%"
                 + reset
             )
+            print("Calculating your results ", end="")
+            show_loading_animation()
+            return user_data
         elif question == 2:
             # If the user chose '2' (Parent), call the 'answer_questions' function with parent questions
             result = answer_questions(parent_questions)
+            if result == None:
+                print("Good Bye!")
+                return None
+            user_data.extend(["parent", result, convert_to_percentage(result)])
             print(
                 green
                 + "Your score is, "
@@ -77,9 +202,16 @@ def who_are_you():
                 + "%"
                 + reset
             )
+            print("Calculating your results ", end="")
+            show_loading_animation()
+            return user_data
         elif question == 3:
             # If the user chose '3' (Teacher), call the 'answer_questions' function with teacher questions
             result = answer_questions(teacher_questions)
+            if result == None:
+                print("Good Bye!")
+                return None
+            user_data.extend(["teacher", result, convert_to_percentage(result)])
             print(
                 green
                 + "Your score is, "
@@ -92,11 +224,15 @@ def who_are_you():
                 + "%"
                 + reset
             )
+            print("Calculating your results ", end="")
+            show_loading_animation()
+            return user_data
         else:
             # Handle invalid input
             print(red + "[!] Please enter the correct number (1/2/3)." + reset)
             continue
-        break  # Exit the loop once the user has answered the questions
+
+        
 
 
 # Function to ask and score questions
@@ -106,14 +242,16 @@ def answer_questions(questions):
         while True:  # Start a loop to ensure the user provides a valid response
             print(cyan + "Please enter your answer as a number between 1 and 5" + reset)
             try:
-                answer = int(
-                    input(q + green + "\nAnswer: " + yellow)
+                answer = input(
+                    q + green + "\nAnswer: " + yellow
                 )  # Get the user's answer and attempt to convert it to an integer
-                if answer <= 0 or answer > 5:
+                if answer == "q":
+                    return None
+                elif int(answer) <= 0 or int(answer) > 5:
                     print(red + "[!] Please enter a number between 1 and 5." + reset)
                     continue  # If the answer is not between 1 and 5, display an error message and restart the loop
                 else:
-                    point = point + answer  # Add the answer to the total score
+                    point = point + int(answer)  # Add the answer to the total score
                     break  # End the loop when a valid answer is obtained
             except:
                 print(
@@ -132,4 +270,4 @@ def convert_to_percentage(number):
 
 if __name__ == "__main__":
     # Call the main function to start the program
-    who_are_you()
+    show_data()
