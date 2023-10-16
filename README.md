@@ -1,34 +1,59 @@
 ![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
 
+# Education Satisfaction Survey Application
 The Education Assessment Survey project aims to create a comprehensive tool for evaluating the quality and effectiveness of educational programs, courses, and instructors. This survey will serve as a valuable resource for educational institutions, teachers, and students to gather feedback and insights to improve the learning experience...
 
-## Codeanywhere Reminders
+## Project Description
+This project includes an education satisfaction survey application designed for teachers, parents, and students. The application can be used to assess the education experience, gather feedback, and improve the education processes.
 
-To run a frontend (HTML, CSS, Javascript only) application in Codeanywhere, in the terminal, type:
+## Getting Started
+You can follow the steps below to run or develop the project on your local machine.
 
-`python3 -m http.server`
+1. Clone the project from this repository:
 
-A button should appear to click: _Open Preview_ or _Open Browser_.
+   ```bash
+   git clone https://github.com/swecery/EducationSurvey.git
+   cd EducationSurvey
 
-To run a frontend (HTML, CSS, Javascript only) application in Codeanywhere with no-cache, you can use this alias for `python3 -m http.server`.
+Technologies Used
+Python
+Node.js
 
-`http_server`
+2. Installing packages and running python code:
+    ```bash
+    pip install -r requirements.txt
+    python run.py
 
-To run a backend Python file, type `python3 app.py`, if your Python file is named `app.py` of course.
+3. Type the following command to get the project up and running:
+    ```bash
+    node index.js
 
-A button should appear to click: _Open Preview_ or _Open Browser_.
 
-In Codeanywhere you have superuser security privileges by default. Therefore you do not need to use the `sudo` (superuser do) command in the bash terminal in any of the lessons.
+## How to use
 
-To log into the Heroku toolbelt CLI:
+1. Open your web browser and navigate to http://localhost:8000. This will take you to the web interface of the Education Satisfaction Survey Application.
+![1](https://raw.githubusercontent.com/swecery/EducationSurvey/main/img/Screenshot1.png)
 
-1. Log in to your Heroku account and go to _Account Settings_ in the menu under your avatar.
-2. Scroll down to the _API Key_ and click _Reveal_
-3. Copy the key
-4. In Codeanywhere, from the terminal, run `heroku_config`
-5. Paste in your API key when asked
+2. Depending on your role (teacher, parent, or student), you can choose the appropriate action.
+![2](https://raw.githubusercontent.com/swecery/EducationSurvey/main/img/Screenshot2.png)
 
-You can now use the `heroku` CLI program - try running `heroku apps` to confirm it works. This API key is unique and private to you so do not share it. If you accidentally make it public then you can create a new one with _Regenerate API Key_.
+3. Answer the survey questions honestly and submit your responses.
+![3](https://raw.githubusercontent.com/swecery/EducationSurvey/main/img/Screenshot3.png)
+
+4. Press 'q' to exit the program at any time.
+![4](https://raw.githubusercontent.com/swecery/EducationSurvey/main/img/Screenshot5.png)
+
+5. After the survey is completed, the results are saved to the google sheets file.
+![5](https://raw.githubusercontent.com/swecery/EducationSurvey/main/img/Screenshot4.png)
+
+The Education Satisfaction Survey Application allows teachers, parents, and students to assess the educational experience, gather feedback, and make improvements to the education process.
+
+
+## Demo
+
+You can use the Heroku link to see the working version of the project.
+
+https://edu-survey-9349e08d9a85.herokuapp.com
 
 ---
 
