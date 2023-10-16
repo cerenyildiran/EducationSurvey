@@ -26,7 +26,7 @@ copyright = """
 
 
 def get_google_sheet():
-    # Define the necessary OAuth2.0 scope for accessing Google Sheets and Drive.
+    #  Define OAuth2.0 scope for Google Sheets and Drive access.
     SCOPE = [
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive.file",
@@ -83,8 +83,8 @@ def print_table(data, column_name):
     """Prints a table to the console.
 
     Args:
-        data: A list of lists, where each inner list represents a row in the table.
-        column_names: A list of strings, where each string represents a column header.
+        data: A list of lists, with each inner list representing a table row.
+        column_names: List of strings, each string represents a column header.
     """
     # Print the table headers in red color
     print(red + "| {:>10} | {:>10} | {:>10} | {:>10} |".format(*column_name))
@@ -113,7 +113,7 @@ def show_loading_animation():
 
 def who_are_you():
     while True:
-        who = input(cyan + "Please enter your name (to end the survey press 'q'): ")
+        who = input(cyan + "Enter your name (to end the survey press 'q'):")
         # Remove leading and trailing spaces
         who = who.strip()
         if who == "q":
@@ -124,7 +124,7 @@ def who_are_you():
         else:
             print(
                 cyan
-                + "Invalid input. Your name must be between 3 to 10 characters and contain only letters."
+                + "Invalid input. Name: 3-10 characters, letters only."
                 + reset
             )
 
@@ -132,10 +132,10 @@ def who_are_you():
 # Define a function to determine the user's role and ask relevant questions
 def ask_question():
     while True:
-        user_data = [] # Store user data
+        user_data = []  # Store user data
         try:
             # Prompt the user to choose their role and handle input exceptions
-            print(cyan + f.renderText(" E d u c a t i o n\n S u r v e y") + reset)
+            print(cyan + f.renderText(" Education\n Survey") + reset)
             print(cyan + copyright + reset)
             who = who_are_you()
             if who == "q":
@@ -144,7 +144,7 @@ def ask_question():
             user_data.append(who)
             question = input(
                 cyan
-                + "Which group do you represent? (to end the survey press 'q') Please enter a number:\n"
+                + "Select your group (to end the survey press 'q')\n"
                 + red
                 + "1) Student\n"
                 + green
@@ -157,17 +157,18 @@ def ask_question():
             if question == "q":
                 return None
             question = int(question)
-        except:
+        except ValueError:
             # Handle non-integer input gracefully
             print(red + "[!] Please enter a number" + reset)
             continue
         if question == 1:
-            # If the user chose '1' (Student), call the 'answer_questions' function with student questions
+
             result = answer_questions(student_questions)
-            if result == None:
+            if result is None:
                 print("Good Bye!")
                 return None
-            user_data.extend(["student", result, convert_to_percentage(result)])
+            convert = convert_to_percentage(result)
+            user_data.extend(["student", result, convert])
             print(
                 green
                 + "Your score is, "
@@ -184,12 +185,13 @@ def ask_question():
             show_loading_animation()
             return user_data
         elif question == 2:
-            # If the user chose '2' (Parent), call the 'answer_questions' function with parent questions
+            # If '2' chosen, call 'answer_questions' with parent questions
             result = answer_questions(parent_questions)
-            if result == None:
+            if result is None:
                 print("Good Bye!")
                 return None
-            user_data.extend(["parent", result, convert_to_percentage(result)])
+            convert = convert_to_percentage(result)
+            user_data.extend(["parent", result, convert])
             print(
                 green
                 + "Your score is, "
@@ -206,12 +208,13 @@ def ask_question():
             show_loading_animation()
             return user_data
         elif question == 3:
-            # If the user chose '3' (Teacher), call the 'answer_questions' function with teacher questions
+            # If '3' chosen, 'answer_questions' with teacher question
             result = answer_questions(teacher_questions)
-            if result == None:
+            if result is None:
                 print("Good Bye!")
                 return None
-            user_data.extend(["teacher", result, convert_to_percentage(result)])
+            convert = convert_to_percentage(result)
+            user_data.extend(["teacher", result, convert])
             print(
                 green
                 + "Your score is, "
@@ -232,28 +235,26 @@ def ask_question():
             print(red + "[!] Please enter the correct number (1/2/3)." + reset)
             continue
 
-        
-
 
 # Function to ask and score questions
 def answer_questions(questions):
     point = 0  # Initialize the total score
     for q in questions:  # Iterate through each question in the list
-        while True:  # Start a loop to ensure the user provides a valid response
-            print(cyan + "Please enter your answer as a number between 1 and 5" + reset)
+        while True:  # Ensure a valid response by starting a loop for the user.
+            print(cyan + "Enter your answer between 1 and 5" + reset)
             try:
                 answer = input(
                     q + green + "\nAnswer: " + yellow
-                )  # Get the user's answer and attempt to convert it to an integer
+                )  # Get the user's answer and attempt integer conversion
                 if answer == "q":
                     return None
                 elif int(answer) <= 0 or int(answer) > 5:
-                    print(red + "[!] Please enter a number between 1 and 5." + reset)
-                    continue  # If the answer is not between 1 and 5, display an error message and restart the loop
+                    print(red + "[!] Enter a number between 1 and 5." + reset)
+                    continue  # If not 1-5, show error and restart
                 else:
-                    point = point + int(answer)  # Add the answer to the total score
+                    point = point + int(answer)  # Add the answer to the total
                     break  # End the loop when a valid answer is obtained
-            except:
+            except ValueError:
                 print(
                     red + "[!] Please enter a number." + reset
                 )  # Display an error message if the answer is not a number
@@ -262,7 +263,7 @@ def answer_questions(questions):
 
 def convert_to_percentage(number):
     # Calculate the percentage value of the given number.
-    # Since there are a total of 10 questions and a maximum of 5 points can be awarded,
+    # Since there are 10 questions and a maximum of 5 points,
     # the formula used here is: (number / 10) / 5 * 100
     percentage = int((number / 10) / 5 * 100)
     return percentage
