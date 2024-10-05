@@ -122,11 +122,8 @@ def who_are_you():
         elif len(who) >= 3 and len(who) <= 10 and who.isalpha():
             return who
         else:
-            print(
-                cyan
-                + "Invalid input. Name: 3-10 characters, letters only."
-                + reset
-            )
+            print(cyan + "Invalid input. Name: 3-10 characters, letters only." + reset)
+            print(yellow + "Example: John, Alice" + reset)
 
 
 # Define a function to determine the user's role and ask relevant questions
@@ -162,7 +159,6 @@ def ask_question():
             print(red + "[!] Please enter a number" + reset)
             continue
         if question == 1:
-
             result = answer_questions(student_questions)
             if result is None:
                 print("Good Bye!")
@@ -233,6 +229,7 @@ def ask_question():
         else:
             # Handle invalid input
             print(red + "[!] Please enter the correct number (1/2/3)." + reset)
+            print(cyan + "Options:\n1) Student\n2) Parent\n3) Teacher" + reset)
             continue
 
 
@@ -250,6 +247,11 @@ def answer_questions(questions):
                     return None
                 elif int(answer) <= 0 or int(answer) > 5:
                     print(red + "[!] Enter a number between 1 and 5." + reset)
+                    print(
+                        yellow
+                        + "Example: If you strongly agree, enter 5. If you strongly disagree, enter 1."
+                        + reset
+                    )
                     continue  # If not 1-5, show error and restart
                 else:
                     point = point + int(answer)  # Add the answer to the total
