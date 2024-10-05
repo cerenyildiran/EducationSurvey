@@ -1,3 +1,4 @@
+"""App for students, parents, and teachers to fill surveys and store data."""
 import time
 import sys
 from pyfiglet import Figlet
@@ -26,28 +27,29 @@ copyright = """
 
 
 def get_google_sheet():
-    #  Define OAuth2.0 scope for Google Sheets and Drive access.
-    SCOPE = [
+    """Define OAuth2.0 scope for Google Sheets and Drive access."""
+    scope = [
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive.file",
         "https://www.googleapis.com/auth/drive",
     ]
     # Load credentials from a service account JSON key file (creds.json).
-    CREDS = Credentials.from_service_account_file("creds.json")
+    creds = Credentials.from_service_account_file("creds.json")
     # Authorize the client with the specified scope.
-    SCOPED_CREDS = CREDS.with_scopes(SCOPE)
+    scoped_creds = creds.with_scopes(scope)
     # Create a Gspread client authorized with the specified credentials.
-    GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
+    gspread_client = gspread.authorize(scoped_creds)
     # Open the Google Sheets spreadsheet by its name ("edusurvey").
-    SHEET = GSPREAD_CLIENT.open("edusurvey")
+    sheet = gspread_client.open("edusurvey")
     # Get a reference to the "Sheet1" worksheet within the spreadsheet.
-    sheet1 = SHEET.worksheet("Sheet1")
+    sheet1 = sheet.worksheet("Sheet1")
 
     # Return the reference to the worksheet.
     return sheet1
 
 
 def save_data(data):
+    """Save the given data to Google Sheets."""
     sheet = get_google_sheet()
     # Get the current number of rows
     row_count = len(sheet.get_all_values())
@@ -63,6 +65,7 @@ def save_data(data):
 
 
 def show_data():
+    """Retrieve and display survey data from Google Sheets."""
     # Ask the user for data and store the result in mydata
     mydata = ask_question()
     # Check if user provided valid data
@@ -80,12 +83,7 @@ def show_data():
 
 
 def print_table(data, column_name):
-    """Prints a table to the console.
-
-    Args:
-        data: A list of lists, with each inner list representing a table row.
-        column_names: List of strings, each string represents a column header.
-    """
+    """Print table headers and rows to the console."""
     # Print the table headers in red color
     print(red + "| {:>10} | {:>10} | {:>10} | {:>10} |".format(*column_name))
     # Print the data rows in white color
@@ -112,6 +110,7 @@ def show_loading_animation():
 
 
 def who_are_you():
+    """Prompt user for name validation and return it."""
     while True:
         who = input(cyan + "Enter your name (to end the survey press 'q'):")
         # Remove leading and trailing spaces
@@ -122,12 +121,13 @@ def who_are_you():
         elif len(who) >= 3 and len(who) <= 10 and who.isalpha():
             return who
         else:
-            print(cyan + "Invalid input. Name: 3-10 characters, letters only." + reset)
+            error = "Invalid input. Name: 3-10 characters, letters only."
+            print(cyan + error + reset)
             print(yellow + "Example: John, Alice" + reset)
 
 
-# Define a function to determine the user's role and ask relevant questions
 def ask_question():
+    """Build a function to set user roles and ask questions."""
     while True:
         user_data = []  # Store user data
         try:
@@ -233,8 +233,8 @@ def ask_question():
             continue
 
 
-# Function to ask and score questions
 def answer_questions(questions):
+    """Ask and score the provided questions."""
     point = 0  # Initialize the total score
     for q in questions:  # Iterate through each question in the list
         while True:  # Ensure a valid response by starting a loop for the user.
@@ -246,12 +246,9 @@ def answer_questions(questions):
                 if answer == "q":
                     return None
                 elif int(answer) <= 0 or int(answer) > 5:
+                    err = "Enter 5 to agree, or 1 to disagree."
                     print(red + "[!] Enter a number between 1 and 5." + reset)
-                    print(
-                        yellow
-                        + "Example: If you strongly agree, enter 5. If you strongly disagree, enter 1."
-                        + reset
-                    )
+                    print(yellow + err + reset)
                     continue  # If not 1-5, show error and restart
                 else:
                     point = point + int(answer)  # Add the answer to the total
@@ -264,9 +261,7 @@ def answer_questions(questions):
 
 
 def convert_to_percentage(number):
-    # Calculate the percentage value of the given number.
-    # Since there are 10 questions and a maximum of 5 points,
-    # the formula used here is: (number / 10) / 5 * 100
+    """Calculate the percentage value of the given number."""
     percentage = int((number / 10) / 5 * 100)
     return percentage
 
