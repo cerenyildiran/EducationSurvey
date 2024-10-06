@@ -191,3 +191,14 @@ We welcome contributions to improve this project! To contribute:
 5. Open a Pull Request.
 
 Please ensure your code follows the PEP8 guidelines and includes appropriate documentation.
+
+## Accreditation
+
+This project was developed as part of the curriculum at Code Institute, focusing on real-world application of software development skills. The project has been rigorously evaluated and approved by Code Institute, ensuring it meets their high standards for educational quality and relevance.
+
+### Code Institute
+
+Code Institute is dedicated to providing industry-relevant education and training in software development, equipping students with the skills needed to succeed in the tech industry. This project aligns with their commitment to practical, hands-on learning experiences.
+
+For more information about Code Institute and their programs, visit [Code Institute's website](https://codeinstitute.net).
+
