@@ -32,6 +32,67 @@ python run.py
 5.Run the Node.js server: Start the Node.js server to serve the frontend or backend of the application:
 node index.js
 
+## Dependencies
+
+The application relies on the following Python libraries, listed in the `requirements.txt`:
+
+- **pyfiglet (1.0.2)**: Used to create large text banners in ASCII art, enhancing CLI output.
+- **cachetools (5.3.1)**: Provides various cache mechanisms that can be used to manage temporary data.
+- **google-auth (2.23.3)** and **google-auth-oauthlib (1.1.0)**: Handle authentication with Google APIs.
+- **gspread (5.11.3)**: Simplifies interacting with Google Sheets for data storage and retrieval.
+- **oauthlib (3.2.2)**, **requests-oauthlib (1.3.1)**: Extends requests to support OAuth for secure data access.
+- **pyasn1 (0.5.0)**, **pyasn1-modules (0.3.0)**: Implements ASN.1 types and codecs, supporting the encoding and decoding of data.
+- **rsa (4.9)**: Provides algorithms for RSA encryption, decryption, and signature verification.
+
+
+## Deployment to Heroku
+
+This guide provides step-by-step instructions on how to deploy the Education Satisfaction Survey Application to Heroku.
+
+### Prerequisites
+
+- A Heroku account. Sign up [here](https://signup.heroku.com/) if you don't have one.
+- The Heroku CLI installed. Download it from [here](https://devcenter.heroku.com/articles/heroku-cli).
+
+### Steps for Deployment
+
+1. **Login to Heroku CLI:**
+   Open your terminal and enter the following command to log in to the Heroku CLI:
+ 
+```bash
+heroku login
+````
+2. Create a Heroku App: To create a new app on Heroku with a unique name, type:
+```bash
+heroku create your-app-name
+```
+3. Set up Remote Repository: To add Heroku as a remote to your local git repository, enter:
+```bash
+git remote add heroku https://git.heroku.com/your-app-name.git
+
+```
+4. Add Config Vars: To set environment variables for your application on Heroku, use:
+```bash
+heroku config:set SOME_API_KEY=your_api_key
+
+```
+5. Deploy Your Application: Deploy your application to Heroku by pushing your code:
+```bash
+git push heroku master
+```
+6. Ensure Dynos are Running: After deploying, ensure that your app's dynos are running with:
+```bash
+heroku ps:scale web=1
+```
+7. Open Your Application: To open your deployed application in a web browser, use:
+```bash
+heroku open
+```
+### Verifying the Deployment
+To verify that your application is running as expected, visit the URL provided by Heroku. If you encounter any issues, you can view the logs for troubleshooting with:
+```bash
+heroku logs --tail
+```
 
 ## User Roles
 The survey is tailored to three types of users:
@@ -82,6 +143,32 @@ Our project is fully compliant with PEP8 standards, ensuring high-quality, reada
 - **PEP8 Compliance:** We use tools like `flake8` and `black` to ensure our code adheres to PEP8 standards. This commitment to quality helps us ensure that our code is consistent and error-free.
 
 ![7](https://raw.githubusercontent.com/swecery/EducationSurvey/main/img/Screenshot7.png)
+
+## User Value
+
+The "Education Satisfaction Survey Application" is crafted to enhance the educational experience by leveraging feedback from key stakeholders: educational institutions, teachers, students, and parents. This application facilitates a dynamic feedback loop, enabling continuous improvement in educational quality and relevance.
+
+### Benefits for Educational Institutions
+- **Targeted Insights**: Gain actionable insights into the perception of courses and programs to enhance educational offerings.
+- **Quality Control**: Regular feedback helps uphold and elevate educational standards, ensuring competitiveness in the evolving academic landscape.
+
+### Benefits for Teachers
+- **Professional Growth**: Feedback identifies strengths and areas for improvement, aiding professional development and teaching effectiveness.
+- **Responsive Teaching**: Adapt teaching methods based on direct feedback to better meet student needs and enhance engagement.
+
+### Benefits for Students
+- **Empowered Participation**: Students have a direct say in their educational journey, encouraging active engagement and ownership of their learning process.
+- **Optimized Learning Environments**: Feedback leads to adjustments that create more supportive and effective learning environments.
+
+### Benefits for Parents
+- **Informed Engagement**: Understand the educational setting more clearly to engage constructively with educators and institutions.
+- **Advocacy for Standards**: Voice expectations and concerns to advocate for higher educational standards and better resources.
+
+### Leveraging Technology
+- **Global Access**: The online platform allows for feedback from any location at any time, overcoming geographical and temporal barriers.
+- **Real-Time Adaptation**: Quick data processing enables swift responses to feedback, ensuring the educational ecosystem is agile and student-centric.
+
+In essence, the "Education Satisfaction Survey Application" not only deepens the understanding of educational dynamics but also cultivates a collaborative environment where improvements are continually driven by direct stakeholder input. This approach ensures that educational experiences evolve and are consistently aligned with the needs and expectations of all involved parties.
 
 
 ## Roadmap
